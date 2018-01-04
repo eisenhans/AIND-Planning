@@ -325,14 +325,17 @@ class InstrumentedProblem(Problem):
         self.found = None
 
     def actions(self, state):
+#        print('increasing succs - state {}'.format(state))
         self.succs += 1
         return self.problem.actions(state)
 
     def result(self, state, action):
+#        print('increasing states - action {} and state {}'.format(action, state))
         self.states += 1
         return self.problem.result(state, action)
 
     def goal_test(self, state):
+#        print('increasing goal_tests - state {}'.format(state))
         self.goal_tests += 1
         result = self.problem.goal_test(state)
         if result:
