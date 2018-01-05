@@ -200,17 +200,21 @@ class AirCargoProblem(Problem):
         """
         count = 0
         goals = list(self.goal)
-        actions = self.actions_list
-        for action in actions:
+        for action in self.actions_list:
+            is_action_relevant = False
             for effect in action.effect_add:
 #                print('action: {}, effect: {}'.format(action, effect))
                 if effect in goals:
+                    is_action_relevant = True
 #                    print('effect {} is in goals {} - increasing count, removing goal'.format(effect, goals))
-                    count += 1
                     goals.remove(effect)
-                    if not goals:
-#                        print('all goals removed, returning count {}'.format(count))
-                        return count
+                    
+            if is_action_relevant:
+                count += 1
+                
+            if not goals:
+#               print('all goals removed, returning count {}'.format(count))
+                return count
         
         return -1
 
