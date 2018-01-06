@@ -1,3 +1,5 @@
+import sys
+
 from aimacode.planning import Action
 from aimacode.search import Problem
 from aimacode.utils import expr, Expr
@@ -288,6 +290,12 @@ class PlanningGraph():
             self.update_s_mutex(self.s_levels[level])
 
             if self.s_levels[level] == self.s_levels[level - 1]:
+#                print('leveled after creating level {}'.format(level))
+#                for le in range(0, level):
+#                    print('literals on level {}:'.format(le))
+#                    for lit in self.s_levels[le]:
+#                        if lit.is_pos:
+#                            lit.show()
                 leveled = True
 
     def add_action_level(self, level):
@@ -334,6 +342,8 @@ class PlanningGraph():
                 self.s_levels[level].add(state_node)
                 action_node.children.add(state_node)
                 state_node.parents.add(action_node)
+#                print('added literal on level {}:'.format(level))
+#                state_node.show()
                 
         # TODO add literal S level to the planning graph as described in the Russell-Norvig text
         # 1. determine what literals to add
@@ -512,8 +522,6 @@ class PlanningGraph():
         level_sum = 0
         for literal in self.problem.goal:
             level = self.find_level(literal)
-            if level == -1:
-                return -1
             level_sum += level
             
         # TODO implement
@@ -522,10 +530,10 @@ class PlanningGraph():
     
     def find_level(self, literal):
         state_node = PgNode_s(literal, True)
-        for level in range(0, 1000):
+        for level in range(0, len(self.s_levels)):
             if state_node in self.s_levels[level]:
 #                print('literal {} found in level {}'.format(literal, level))
                 return level
         
         print('literal {} not found in graph'.format(literal))
-        return -1
+        return sys.maxsize

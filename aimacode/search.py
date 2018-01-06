@@ -330,7 +330,7 @@ class InstrumentedProblem(Problem):
         return self.problem.actions(state)
 
     def result(self, state, action):
-#        print('increasing states - action {} and state {}'.format(action, state))
+#        print('increasing states - state {} and action {}'.format(state, action))
         self.states += 1
         return self.problem.result(state, action)
 

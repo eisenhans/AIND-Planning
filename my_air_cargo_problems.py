@@ -199,21 +199,25 @@ class AirCargoProblem(Problem):
         executed.
         """
         count = 0
-        goals = list(self.goal)
+        
+        state = decode_state(node.state, self.state_map)
+#        print('state: {}, state.pos: {}, state.neg: {}'.format(state, state.pos, state.neg))
+        unreached_goals = set(self.goal) - set(state.pos)
+#        print('goals total: {}, {} goals not reached yet: {}'.format(self.goal, len(unreached_goals), unreached_goals))
         for action in self.actions_list:
             is_action_relevant = False
             for effect in action.effect_add:
 #                print('action: {}, effect: {}'.format(action, effect))
-                if effect in goals:
+                if effect in unreached_goals:
                     is_action_relevant = True
 #                    print('effect {} is in goals {} - increasing count, removing goal'.format(effect, goals))
-                    goals.remove(effect)
+                    unreached_goals.remove(effect)
                     
             if is_action_relevant:
                 count += 1
                 
-            if not goals:
-#               print('all goals removed, returning count {}'.format(count))
+            if not unreached_goals:
+                print('all goals removed, returning count {}'.format(count))
                 return count
         
         return -1
@@ -286,7 +290,7 @@ def air_cargo_p2() -> AirCargoProblem:
 
 
 def air_cargo_p3() -> AirCargoProblem:
-    cargos = ['C1', 'C2', 'C3']
+    cargos = ['C1', 'C2', 'C3', 'C4']
     planes = ['P1', 'P2']
     airports = ['JFK', 'SFO', 'ATL', 'ORD']
     pos = [expr('At(C1, SFO)'),
