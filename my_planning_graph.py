@@ -290,12 +290,6 @@ class PlanningGraph():
             self.update_s_mutex(self.s_levels[level])
 
             if self.s_levels[level] == self.s_levels[level - 1]:
-#                print('leveled after creating level {}'.format(level))
-#                for le in range(0, level):
-#                    print('literals on level {}:'.format(le))
-#                    for lit in self.s_levels[le]:
-#                        if lit.is_pos:
-#                            lit.show()
                 leveled = True
 
     def add_action_level(self, level):
@@ -315,17 +309,6 @@ class PlanningGraph():
                 for state_node in action_node.prenodes & self.s_levels[level]:
                     state_node.children.add(action_node)
                     action_node.parents.add(state_node)
-#                print('\nadding action node to level {}:'.format(level))
-#                action_node.show()
-
-#        print('created action level {} with {} actions'.format(level, len(self.a_levels[level])))
-        # TODO add action A level to the planning graph as described in the Russell-Norvig text
-        # 1. determine what actions to add and create those PgNode_a objects
-        # 2. connect the nodes to the previous S literal level
-        # for example, the A0 level will iterate through all possible actions for the problem and add a PgNode_a to a_levels[0]
-        #   set iff all prerequisite literals for the action hold in S0.  This can be accomplished by testing
-        #   to see if a proposed PgNode_a has prenodes that are a subset of the previous S level.  Once an
-        #   action node is added, it MUST be connected to the S node instances in the appropriate s_level set.
 
     def add_literal_level(self, level):
         """ add an S (literal) level to the Planning Graph
@@ -342,17 +325,6 @@ class PlanningGraph():
                 self.s_levels[level].add(state_node)
                 action_node.children.add(state_node)
                 state_node.parents.add(action_node)
-#                print('added literal on level {}:'.format(level))
-#                state_node.show()
-                
-        # TODO add literal S level to the planning graph as described in the Russell-Norvig text
-        # 1. determine what literals to add
-        # 2. connect the nodes
-        # for example, every A node in the previous level has a list of S nodes in effnodes that represent the effect
-        #   produced by the action.  These literals will all be part of the new S level.  Since we are working with sets, they
-        #   may be "added" to the set without fear of duplication.  However, it is important to then correctly create and connect
-        #   all of the new S nodes as children of all the A nodes that could produce them, and likewise add the A nodes to the
-        #   parent sets of the S nodes
 
     def update_a_mutex(self, nodeset):
         """ Determine and update sibling mutual exclusion for A-level nodes
@@ -443,19 +415,10 @@ class PlanningGraph():
         """
         for parent1 in node_a1.parents:
             for parent2 in node_a2.parents:
-                
-#        for state_node1 in node_a1.prenodes:
-#            for state_node2 in node_a2.prenodes:
                 if parent1.is_mutex(parent2):
-                    print('parent states of 2 actions are mutex:')
-                    parent1.show()
-                    parent2.show()
-                    # TODO node_a1.prenodes ist ein leeres set - wie kann das sein?
                     return True
                 
         return False
-#        return (set(node_a1.action.precond_pos) & set(node_a2.action.precond_neg) or
-#                set(node_a1.action.precond_neg) & set(node_a2.action.precond_pos))
 
     def update_s_mutex(self, nodeset: set):
         """ Determine and update sibling mutual exclusion for S-level nodes
@@ -524,15 +487,12 @@ class PlanningGraph():
             level = self.find_level(literal)
             level_sum += level
             
-        # TODO implement
-        # for each goal in the problem, determine the level cost, then add them together
         return level_sum
     
     def find_level(self, literal):
         state_node = PgNode_s(literal, True)
         for level in range(0, len(self.s_levels)):
             if state_node in self.s_levels[level]:
-#                print('literal {} found in level {}'.format(literal, level))
                 return level
         
         print('literal {} not found in graph'.format(literal))

@@ -1,3 +1,5 @@
+import sys
+
 from aimacode.logic import PropKB
 from aimacode.planning import Action
 from aimacode.search import (
@@ -201,26 +203,21 @@ class AirCargoProblem(Problem):
         count = 0
         
         state = decode_state(node.state, self.state_map)
-#        print('state: {}, state.pos: {}, state.neg: {}'.format(state, state.pos, state.neg))
         unreached_goals = set(self.goal) - set(state.pos)
-#        print('goals total: {}, {} goals not reached yet: {}'.format(self.goal, len(unreached_goals), unreached_goals))
         for action in self.actions_list:
             is_action_relevant = False
             for effect in action.effect_add:
-#                print('action: {}, effect: {}'.format(action, effect))
                 if effect in unreached_goals:
                     is_action_relevant = True
-#                    print('effect {} is in goals {} - increasing count, removing goal'.format(effect, goals))
                     unreached_goals.remove(effect)
                     
             if is_action_relevant:
                 count += 1
                 
             if not unreached_goals:
-                print('all goals removed, returning count {}'.format(count))
                 return count
         
-        return -1
+        return sys.maxsize
 
 
 def air_cargo_p1() -> AirCargoProblem:

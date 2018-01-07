@@ -1,5 +1,3 @@
-import os
-import sys
 import unittest
 
 from aimacode.utils import expr
