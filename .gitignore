@@ -7,5 +7,9 @@ __pycache__
 tests/.cache/v/cache/lastfailed
 .cache/v/cache/lastfailed
 .ipynb_*
-*.png
-*.tex
+
+# Latex
+*.aux
+*.gz
+*.log
+*.out
