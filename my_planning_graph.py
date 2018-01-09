@@ -306,7 +306,7 @@ class PlanningGraph():
             action_node = PgNode_a(action)
             if action_node.prenodes <= self.s_levels[level]:
                 self.a_levels[level].add(action_node)
-                for state_node in action_node.prenodes & self.s_levels[level]:
+                for state_node in action_node.prenodes:
                     state_node.children.add(action_node)
                     action_node.parents.add(state_node)
 
@@ -413,6 +413,39 @@ class PlanningGraph():
         :param node_a2: PgNode_a
         :return: bool
         """
+        # TODO Note to reviewer: I'm not sure about the implementation here:
+        # Do I have to use the nodes' prenodes or parents? I thought I should
+        # use prenodes, like so:
+        #
+        #        for prenode1 in node_a1.prenodes:
+        #            for prenode2 in node_a2.prenodes:
+        #                if prenode1.is_mutex(prenode2):
+        #                    return True
+        #                
+        #        return False
+        #
+        # But then the test fails. If I use parents instead (see code below),
+        # the test succeeds.
+        #
+        # When I uncomment the following code, I see that there is a situation
+        # where the node has one parent, but no prenodes. This is the reason
+        # why the test fails. Shouldn't the parents be a subset of the prenodes?
+        #
+        #        parents1 = node_a1.parents
+        #        prenodes1 = node_a1.prenodes
+        #        if len(parents1) != len(prenodes1):
+        #            print('\nparents and prenodes differ for this action node:')
+        #            node_a1.show()
+        #            print('\nnode has {} parents:'.format(len(parents1)))
+        #            for pa in parents1:
+        #                pa.show()
+        #                
+        #            print('\nnode has {} prenodes:'.format(len(prenodes1)))
+        #            for pn in prenodes1:
+        #                pn.show()
+        #
+        # Maybe there is an error somewhere else in my code?
+        
         for parent1 in node_a1.parents:
             for parent2 in node_a2.parents:
                 if parent1.is_mutex(parent2):
