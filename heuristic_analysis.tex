@@ -284,17 +284,13 @@ that are not optimal for problems 2 and 3.
 \section*{Interpretation}\label{interpretation}
 
 \subsection*{Breadth first tree search}\label{breadth-first-tree-search}
-
-Many expansions, but fast, and optimal solutions.
+By definition, breadth first yields optimal solutions. There are many expansions because all states with path length < solution length have to be created. The speed is in the medium range. According to the AIMA book (Section 3.4.1), execution time can be a problem for breadth first. Here this is no problem because the search space is small.
 
 \subsection*{Depth first graph search}\label{depth-first-graph-search}
-
-Few expansions and fast, but the solutions for problem 2 and 3 last
-almost 600 steps.
+Depth first goes all the way down the graph and backtracks only if no more nodes exist. Therefore the path length is almost as high as the number of expansions, and the solutions are far from optimal. As this is depth first \emph{graph} search, the algorithm does not select the same state twice - it just keeps exploring new states until a solution is found. Therefore the algorithm is fast and needs relatively few expansions.
 
 \subsection*{Greedy best first graph search with dummy
 heuristic}\label{greedy-best-first-graph-search-with-dummy-heuristic}
-
 As the heuristic function returns the same value for every node, this
 algorithm selects nodes randomly. This works surprinsingly well: the
 algorithm is fast, and the solutions for problem 2 and 3 are not
@@ -302,31 +298,22 @@ optimal, but much better than those from depth\_first.
 
 \subsection*{A* search with dummy
 heuristic}\label{a-search-with-dummy-heuristic}
-
-This is the same as uniform\_cost. The solutions are optimal, speed is
-in the medium range, but the number of expansions is very high.
+The A* heuristic estimates total path length as the sum of the path so far and the value of the heuristic function. As the heuristic here always returns 1, this algorithm is equivalent to uniform\_cost (see section 3.5.2 in the AIMA book). This means that solutions are optimal. Speed is the second lowest of the algorithms considered, and the number of expansions is the highest. The reason that speed and number of expansions are worse than for breadth first is pointed out in section 3.4.2 of the AIMA book: as uniform cost guarantees to find an optimal solution, the goal test is applied to a node only before it is expanded, not directly after it has been created.
 
 \subsection*{A* search with ignore\_preconditions
 heuristic}\label{a-search-with-ignore_preconditions-heuristic}
-
-The number of expansions is medium, the solutions are optimal, and the
-speed is good. Given the data, this algorithm works best overall.
+As pointed out in section 10.2.3 of the AIMA book, this heuristic does not guarantee to find an optimal solution. But in our case the solutions are optimal. The number of expansions is medium, and the speed is good. Given the data, this algorithm works best overall.
 
 \subsection*{A* search with levelsum
 heuristic}\label{a-search-with-levelsum-heuristic}
+As mentioned in section 10.3.1 of the AIMA book, this algorithm also does not guarantee optimal solutions. But like ignore\_preconditions, optimal solutions are found for our problems. This algorithm is four times slower than the slowest of the others. It is so slow because the planning graph is constructed in each call of the heuristic function.\\
 
-Needs very few expansions and returns optimal solutions. But this
-algorithm is four times slower than the slowest of the others. It is so
-slow because the planning graph is constructed in each call of the
-heuristic function.\\
-
-As the planning graph has polynomial size, this heuristic should work comparatively well
-for large search spaces. The problems considered here are so simple that
-this approach is not very useful.
+As the planning graph has polynomial size, this heuristic should work comparatively well for large search spaces. The problems considered here are so simple that
+the additional effort does not pay off.
 
 \section*{Final thoughts}\label{final-thoughts}
 
-    It is not surprising that using an informed heuristic like
+It is not surprising that using an informed heuristic like
 ignore\_preconditions or levelsum yields better results than uninformed
 searches. But as a general note, I am surprised by the fact that
 automated planning is so difficult. The problems that we considered here
